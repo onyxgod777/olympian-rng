@@ -296,7 +296,11 @@ async function payAndRoll() {
     
     // 2. Sign
     setUIState('signing');
-    const tx = Transaction.from(Buffer.from(txBase64, 'base64'));
+    // Browser-safe base64 decode (no Node.js Buffer dependency)
+    const txBytes = new Uint8Array(
+      atob(txBase64).split('').map(c => c.charCodeAt(0))
+    );
+    const tx = Transaction.from(txBytes);
     const signedTx = await wallet.signTransaction(tx);
     
     // 3. Send
