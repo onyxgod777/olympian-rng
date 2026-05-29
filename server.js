@@ -246,29 +246,25 @@ let publicKey = null;
 
 // ─── Wallet Connect ─────────────────────────────────────────────────────────
 async function connectWallet() {
-  if (window.solana && window.solana.isPhantom) {
-    try {
-      const resp = await window.solana.connect();
-      publicKey = new PublicKey(resp.publicKey.toString());
-      wallet = window.solana;
-      showConnected();
-    } catch (e) {
-      showStatus('error', 'Connection rejected');
+  // Try modern Phantom (window.phantom)
+  const provider = window.phantom?.solana || window.solana;
+  
+  if (!provider) {
+    showStatus('error', 'No Solana wallet found. Install Phantom or Backpack.');
+    return;
+  }
+  
+  try {
+    // Request connection — some wallets need this on HTTPS
+    if (provider.isConnected && !provider.isConnected()) {
+      await provider.connect();
     }
-  } else {
-    // Try generic wallet (Backpack, Solflare, etc.)
-    if (window.solana) {
-      try {
-        const resp = await window.solana.connect();
-        publicKey = new PublicKey(resp.publicKey.toString());
-        wallet = window.solana;
-        showConnected();
-      } catch(e) {
-        showStatus('error', 'Connection rejected');
-      }
-    } else {
-      showStatus('error', 'No Solana wallet found. Install Phantom or Backpack.');
-    }
+    const resp = await provider.connect();
+    publicKey = new PublicKey(resp.publicKey.toString());
+    wallet = provider;
+    showConnected();
+  } catch (e) {
+    showStatus('error', 'Connection rejected: ' + e.message);
   }
 }
 
