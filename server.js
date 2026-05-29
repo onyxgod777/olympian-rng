@@ -398,6 +398,11 @@ function resetApp() {
 </html>`);
 });
 
+process.on('uncaughtException', (err) => {
+  console.error('FATAL:', err);
+  process.exit(1);
+});
+
 app.listen(PORT, '0.0.0.0', () => {
   console.log('OLYMPIAN RNG server running on http://0.0.0.0:' + PORT);
   console.log('RPC:', RPC_URL);
