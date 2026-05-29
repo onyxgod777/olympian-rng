@@ -119,7 +119,6 @@ app.get('/', (req, res) => {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OLYMPIAN RNG - Pay & Roll</title>
 <script src="https://unpkg.com/@solana/web3.js@1.98.0/lib/index.iife.min.js"></script>
-<script src="https://unpkg.com/bs58@6.0.0/dist/bs58.min.js"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -239,7 +238,6 @@ app.get('/', (req, res) => {
 <script>
 const solWeb3 = window.solanaWeb3;
 const { Connection, PublicKey, Transaction, LAMPORTS_PER_SOL } = solWeb3;
-const { decode: bs58decode } = window.bs58;
 
 let wallet = null;
 let publicKey = null;
